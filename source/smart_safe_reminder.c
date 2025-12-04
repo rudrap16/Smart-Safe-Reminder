@@ -28,6 +28,7 @@ void blue_led_off(void);
 void all_leds_off(void);
 
 /* Variables used to track timer state and LED behavior */
+/* volatile keyword was suggested by GenAI for debugging */
 volatile uint32_t target_time = 0;
 volatile uint32_t elapsed_time = 0;
 volatile uint8_t timer_running = 0;
@@ -37,6 +38,7 @@ volatile uint8_t ready_mode = 0;
 volatile uint32_t requested_time = 0;
 
 /* This function to get user input from the terminal */
+/* read_unit_from_console was suggested by co-pilot for handling user input */
 static uint32_t read_uint_from_console(void)
 {
     uint32_t value = 0;
@@ -46,7 +48,8 @@ static uint32_t read_uint_from_console(void)
     while (1)
     {
         ch = GETCHAR();      // waiting for user to type something
-
+                            /* GETCHAR() and PUTCHAR() were implemented after
+                            using the scaf() which was not feasible option */
         if (ch == '\r' || ch == '\n')  // user pressed Enter
         {
             PUTCHAR('\r');
@@ -147,6 +150,7 @@ void PORTD_IRQHandler(void) {
     GPIO_PortClearInterruptFlags(GPIOD, 1U << 11U);
 
     /* Small delay for handling button bounce*/
+    // Below is the debouncing loop correction was resolved using chatgpt
     for(volatile int i = 0; i < 100000; i++);
 
     if (!timer_running && !timer_expired && target_time > 0) {

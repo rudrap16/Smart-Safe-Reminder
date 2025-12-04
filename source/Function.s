@@ -16,7 +16,8 @@
 .type setup_red_led, %function
 setup_red_led:
     @Here enabling the clock for Port C (Red LED - PTC9)
-    ldr r1, =0x40048038     @ System Clock Gate Control Register 5
+    ldr r1, =0x40048038 @this addresses were found from the ARM reference manual   
+    @ System Clock Gate Control Register 5
     ldr r0, [r1]
     orr r0, r0, #(1<<11)    @ enable clock for port C (bit 11)
     str r0, [r1]
@@ -75,13 +76,14 @@ setup_blue_led:
     str r0, [r1]
     bx  lr
 
-@ ========== RED LED Control ==========
+@RED LED Control
 
 .global red_led_on
 .type red_led_on, %function
 red_led_on:
     ldr r1, =0x400FF080     @GPIOC_PDOR is Output Register
-    ldr r0, [r1]
+    ldr r0, [r1]            
+    @bic (Bit clear) was suggested as a technical instruction by GenAI 
     bic r0, r0, #(1<<9)     @ clear bit 9 (LOW = LED ON)
     str r0, [r1]
     bx  lr
@@ -95,14 +97,14 @@ red_led_off:
     str r0, [r1]
     bx  lr
 
-@ ========== GREEN LED Control ==========
+@GREEN LED Control
 
 .global green_led_on
 .type green_led_on, %function
 green_led_on:
     ldr r1, =0x400FF100     @GPIOE_PDOR is Output Register
     ldr r0, [r1]
-    bic r0, r0, #(1<<6)     @ clear bit 6 (LOW = LED ON)
+    bic r0, r0, #(1<<6)    @ clear bit 6 (LOW = LED ON)
     str r0, [r1]
     bx  lr
 
@@ -115,7 +117,7 @@ green_led_off:
     str r0, [r1]
     bx  lr
 
-@ ========== BLUE LED Control ==========
+@BLUE LED Control
 
 .global blue_led_on
 .type blue_led_on, %function
@@ -135,7 +137,7 @@ blue_led_off:
     str r0, [r1]
     bx  lr
 
-@ ========== Turn OFF All LEDs ==========
+@Turn OFF All LEDs
 
 .global all_leds_off
 .type all_leds_off, %function
